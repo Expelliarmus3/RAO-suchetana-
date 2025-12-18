@@ -1,46 +1,38 @@
-# FILE: models.py
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from datetime import datetime
 
 db = SQLAlchemy()
 
-# 1. USER TABLE
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    role = db.Column(db.String(50), default="Student")
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
+    full_name = db.Column(db.String(100))
+    role = db.Column(db.String(20)) # 'Student' or 'Professor'
     
-    full_name = db.Column(db.String(150))
-    college = db.Column(db.String(150))
-    phone = db.Column(db.String(20))
+    # Student Profile Fields
     qualification = db.Column(db.String(100))
-    
-    internships = db.relationship('Internship', backref='author', lazy=True)
-    applications = db.relationship('Application', backref='applicant', lazy=True)
+    college = db.Column(db.String(100))
+    phone = db.Column(db.String(20))
+    resume_file = db.Column(db.String(100)) # Stores filename like 'resume_1.pdf'
 
-# 2. INTERNSHIP TABLE (Updated with 'description')
+# In models.py
 class Internship(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(150))
     domain = db.Column(db.String(100))
-    required_skills = db.Column(db.String(500))
-    type = db.Column(db.String(50)) # Remote/Onsite
-    
-    # --- THIS WAS MISSING ---
-    description = db.Column(db.Text) 
-    # ------------------------
-
+    description = db.Column(db.String(500))
+    type = db.Column(db.String(50)) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    applications = db.relationship('Application', backref='internship', lazy=True)
-
-# 3. APPLICATION TABLE
+    
+    # --- ADD THIS NEW LINE ---
+    pdf_link = db.Column(db.String(500))
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     internship_id = db.Column(db.Integer, db.ForeignKey('internship.id'))
-    generated_text = db.Column(db.Text) 
-    resume_filename = db.Column(db.String(300))
-    status = db.Column(db.String(50), default="Applied")
+    status = db.Column(db.String(20), default="Pending")
+    
+    # Relationships to access data easily
+    student = db.relationship('User', backref='applications')
+    internship = db.relationship('Internship', backref='applications')

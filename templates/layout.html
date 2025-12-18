@@ -36,7 +36,7 @@
 
         .container { padding: 40px; max-width: 1100px; margin: 0 auto; width: 100%; }
 
-        /* --- HERO & OPTIMIZER STYLES (Restored) --- */
+        /* --- HERO & OPTIMIZER STYLES --- */
         .hero-wrapper { text-align: center; margin-top: 40px; }
         .hero-icon-lg { width: 60px; height: 60px; background: #eff6ff; color: #3b82f6; border-radius: 16px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         .hero-title { font-size: 36px; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
@@ -50,7 +50,7 @@
         .search-container input { flex: 1; border: none; padding: 12px 20px; font-size: 16px; outline: none; }
         .btn-optimize { background: #0f172a; color: white; padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; display: flex; gap: 8px; align-items: center; }
 
-        /* --- CARD STYLES (Trending Research) --- */
+        /* --- CARD STYLES --- */
         .job-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
         .card { 
             background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; 
@@ -84,26 +84,33 @@
         {% endif %}
 
         <ul class="menu-list">
-    {% if current_user.is_authenticated and current_user.role == 'Professor' %}
-        <li><a href="/professor" class="{{ 'active' if request.path == '/professor' else '' }}"><i class="fa-solid fa-chalkboard-user"></i> Dashboard</a></li>
-        <li><a href="/professor/applications" class="{{ 'active' if request.path == '/professor/applications' else '' }}"><i class="fa-solid fa-users-viewfinder"></i> Applications</a></li>
-    {% else %}
-        <li><a href="/student" class="{{ 'active' if request.path == '/student' else '' }}"><i class="fa-solid fa-house"></i> Home</a></li>
-        <li><a href="/papers" class="{{ 'active' if request.path == '/papers' else '' }}"><i class="fa-solid fa-layer-group"></i> Research Papers</a></li>
-        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
-    {% endif %}
-</ul>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == 'Professor' %}
+                    <li><a href="/professor" class="{{ 'active' if request.path == '/professor' else '' }}"><i class="fa-solid fa-chalkboard-user"></i> Dashboard</a></li>
+                    <li><a href="/all_applications" class="{{ 'active' if request.path == '/all_applications' else '' }}"><i class="fa-solid fa-users-viewfinder"></i> Applications</a></li>
+                
+                {% else %}
+                    <li><a href="/student" class="{{ 'active' if request.path == '/student' else '' }}"><i class="fa-solid fa-house"></i> Home</a></li>
+                    <li><a href="/papers" class="{{ 'active' if request.path == '/papers' else '' }}"><i class="fa-solid fa-layer-group"></i> Internships</a></li>
+                {% endif %}
+
+                <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
+            {% endif %}
+        </ul>
     </aside>
 
     <main class="main-content">
         <header class="top-nav">
             <div class="nav-links">
-                {% if current_user.is_authenticated and current_user.role == 'Professor' %}
-                    <a href="/professor" class="{{ 'active' if request.path == '/professor' else '' }}">Professor Dashboard</a>
-                    <a href="/professor/applications" class="{{ 'active' if request.path == '/professor/applications' else '' }}">Applications</a>
-                {% else %}
-                    <a href="/student" class="{{ 'active' if request.path == '/student' else '' }}">Optimizer</a>
-                    <a href="/papers" class="{{ 'active' if request.path == '/papers' else '' }}">Internships</a>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'Professor' %}
+                        <a href="/professor" class="{{ 'active' if request.path == '/professor' else '' }}">Professor Dashboard</a>
+                        <a href="/all_applications" class="{{ 'active' if request.path == '/all_applications' else '' }}">Applications</a>
+                    {% else %}
+                        <a href="/student" class="{{ 'active' if request.path == '/student' else '' }}">Optimizer</a>
+                        <a href="/papers" class="{{ 'active' if request.path == '/papers' else '' }}">Internships</a>
+                    {% endif %}
+                    
                     <a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact Us</a>
                 {% endif %}
             </div>

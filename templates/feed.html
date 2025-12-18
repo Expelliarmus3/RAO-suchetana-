@@ -1,42 +1,192 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2 style="font-size:24px; font-weight:700;">Trending Opportunities</h2>
-<p style="color:#64748b; margin-bottom:30px;">Apply to top research internships.</p>
+<style>
+    /* --- PAGE HEADER --- */
+    .page-header {
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .page-title {
+        font-size: 32px; font-weight: 800; color: #0f172a;
+        margin-bottom: 10px; letter-spacing: -0.5px;
+    }
+    .page-subtitle { color: #64748b; font-size: 16px; max-width: 500px; margin: 0 auto; line-height: 1.5; }
+
+    /* --- JOB GRID --- */
+    .job-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 30px;
+        padding-bottom: 50px;
+    }
+
+    /* --- CARD DESIGN --- */
+    .research-card {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #f1f5f9;
+        padding: 25px;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .research-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -5px rgba(0,0,0,0.08);
+        border-color: #cbd5e1;
+    }
+
+    /* Card Header */
+    .card-top {
+        display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;
+    }
+    
+    .domain-badge {
+        background: #eef2ff; color: #4f46e5;
+        padding: 5px 12px; border-radius: 30px;
+        font-size: 11px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.5px;
+        border: 1px solid #c7d2fe;
+    }
+
+    .post-date { font-size: 12px; color: #94a3b8; font-weight: 600; }
+
+    /* Content */
+    .job-title {
+        font-size: 18px; font-weight: 800; color: #0f172a;
+        margin-bottom: 8px; line-height: 1.4;
+    }
+    
+    .prof-name {
+        font-size: 13px; color: #64748b; margin-bottom: 20px;
+        display: flex; align-items: center; gap: 6px;
+    }
+
+    .skills-box {
+        margin-bottom: 20px;
+    }
+    .skill-pill {
+        display: inline-block; font-size: 11px; color: #475569;
+        background: #f8fafc; padding: 4px 8px; border-radius: 6px;
+        border: 1px solid #e2e8f0; margin-right: 4px; margin-bottom: 4px;
+    }
+
+    /* APPLY SECTION */
+    .apply-container {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: auto; /* Pushes to bottom */
+    }
+
+    .apply-label {
+        font-size: 11px; font-weight: 800; color: #94a3b8;
+        text-transform: uppercase; margin-bottom: 10px; display: block;
+    }
+
+    .file-input {
+        font-size: 12px; width: 100%; margin-bottom: 10px; color: #64748b;
+    }
+    
+    /* Customizing file input slightly */
+    .file-input::file-selector-button {
+        border: none; background: #e2e8f0; padding: 5px 10px;
+        border-radius: 4px; color: #475569; font-weight: 600; cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .btn-apply {
+        width: 100%;
+        background: #0f172a; color: white; border: none;
+        padding: 10px; border-radius: 8px; font-weight: 700; font-size: 13px;
+        cursor: pointer; transition: 0.2s;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-apply:hover { background: #334155; }
+
+    /* ALREADY APPLIED STATE */
+    .applied-badge {
+        background: #dcfce7; color: #166534;
+        text-align: center; padding: 12px; border-radius: 12px;
+        font-weight: 700; font-size: 13px; border: 1px solid #bbf7d0;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+
+    /* Footer Meta */
+    .card-footer {
+        margin-top: 15px; font-size: 12px; color: #94a3b8;
+        display: flex; align-items: center; gap: 5px;
+    }
+</style>
+
+<div class="page-header">
+    <div style="width: 50px; height: 50px; background: #eff6ff; color: #3b82f6; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 15px;">
+        <i class="fa-solid fa-layer-group"></i>
+    </div>
+    <h1 class="page-title">Trending Opportunities</h1>
+    <p class="page-subtitle">Explore open research positions, internships, and paper collaborations curated for you.</p>
+</div>
 
 <div class="job-grid">
     {% if internships %}
         {% for job in internships %}
-        <div class="job-card">
-            <div class="job-header">
-                <div>
-                    <h3 style="font-size:18px;">{{ job.title }}</h3>
-                    <p style="font-size:12px; color:#94a3b8; margin-top:4px;">{{ job.author.full_name }} • {{ job.type }}</p>
-                </div>
-                <span class="tag" style="background:#dbeafe; color:#1e40af;">{{ job.domain }}</span>
-            </div>
+        <div class="research-card">
             
-            <p style="font-size:13px; color:#475569; margin-bottom:15px;">
-                <b>Required Skills:</b> {{ job.required_skills }}
-            </p>
-
-            <div style="background:#f8fafc; padding:10px; border-radius:8px;">
-                <p style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:8px;">UPLOAD RESUME</p>
-                <form action="/apply/{{ job.id }}" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="resume" required style="font-size:12px; width:100%;">
-                    <button type="submit" class="btn-apply">Apply Now</button>
-                </form>
+            <div class="card-top">
+                <span class="post-date"><i class="fa-regular fa-clock"></i> {{ job.type }}</span>
+                <span class="domain-badge">{{ job.domain }}</span>
             </div>
 
-            <div class="applicant-count">
-                <i class="fa-solid fa-users"></i> {{ job.applications|length }} Students applied
+            <div class="job-title">{{ job.title }}</div>
+            <div class="prof-name">
+                <i class="fa-solid fa-user-tie"></i> Posted by Prof. {{ job.author.full_name }}
             </div>
+
+            <div class="skills-box">
+                {% if job.description %}
+                    <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 10px;">
+                        {{ job.description[:100] }}...
+                    </p>
+                {% endif %}
+                <div style="font-size: 13px; color: #475569;">
+                    <i class="fa-solid fa-microchip" style="color:#6366f1; margin-right:5px;"></i> {{ job.title.split(' ')[0] }} Research
+                </div>
+            </div>
+
+            <div>
+                {% if job.id in my_apps %}
+                    <div class="applied-badge">
+                        <i class="fa-solid fa-circle-check"></i> Application Sent
+                    </div>
+                {% else %}
+                    <div class="apply-container">
+                        <span class="apply-label">Quick Apply</span>
+                        <form action="/apply/{{ job.id }}" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="resume" class="file-input" required>
+                            <button type="submit" class="btn-apply">
+                                Submit Application <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+
+                <div class="card-footer">
+                    <i class="fa-solid fa-users-viewfinder"></i> {{ job.applications|length }} Applicants so far
+                </div>
+            </div>
+
         </div>
         {% endfor %}
     {% else %}
-        <div style="text-align:center; grid-column:span 3; padding:50px; color:#94a3b8;">
-            <i class="fa-regular fa-folder-open" style="font-size:40px; margin-bottom:10px;"></i>
-            <p>No internships posted yet.</p>
+        <div style="grid-column: 1 / -1; text-align: center; padding: 80px; background: white; border-radius: 20px; border: 2px dashed #e2e8f0;">
+            <i class="fa-regular fa-folder-open" style="font-size: 48px; color: #cbd5e1; margin-bottom: 20px;"></i>
+            <h3 style="color: #0f172a; margin-bottom: 10px;">No Opportunities Found</h3>
+            <p style="color: #64748b;">Check back later or ask your professor to post new openings.</p>
         </div>
     {% endif %}
 </div>

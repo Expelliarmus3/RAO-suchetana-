@@ -1,52 +1,224 @@
-{% extends "layout.html" %}
-{% block content %}
-<div style="display: flex; justify-content: center; align-items: center; height: 70vh;">
-    <div class="form-box" style="text-align: center; width: 400px;">
-        <div style="width: 50px; height: 50px; background: #eef2ff; color: #6c5ce7; border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-size: 20px;">🔒</div>
-        <h2>Welcome to RAO</h2>
-        <p style="color: #636e72; margin-bottom: 30px;">Please login or setup your profile to access the optimization tools.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to RAO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        <div id="login-section">
-            <form action="/login" method="POST">
-                <div class="form-group" style="text-align:left;">
-                    <label>Email</label>
-                    <input type="email" name="email" required>
-                </div>
-                <div class="form-group" style="text-align:left;">
-                    <label>Password</label>
-                    <input type="password" name="password" required>
-                </div>
-                <button type="submit" class="btn-action" style="width: 100%;">Login</button>
-            </form>
-            <p style="margin-top:20px; font-size:14px;">New here? <a href="#" onclick="showSignup()" style="color:#6c5ce7;">Create Profile</a></p>
-        </div>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 30px 30px;
+            overflow: hidden;
+            position: relative;
+        }
 
-        <div id="signup-section" style="display:none;">
-            <form action="/signup" method="POST">
-                <div class="form-group" style="text-align:left;">
-                    <label>I am a</label>
-                    <select name="role" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 6px;">
-    <option value="Student">I am a Student</option>
-    <option value="Professor">I am a Professor</option>
-</select>
-                </div>
-                <div class="form-group" style="text-align:left;">
-                    <label>Email</label>
-                    <input type="email" name="email" required>
-                </div>
-                <div class="form-group" style="text-align:left;">
-                    <label>Password</label>
-                    <input type="password" name="password" required>
-                </div>
-                <button type="submit" class="btn-action" style="width: 100%;">Sign Up</button>
-            </form>
-            <p style="margin-top:20px; font-size:14px;">Have account? <a href="#" onclick="showLogin()" style="color:#6c5ce7;">Login</a></p>
-        </div>
+        /* --- TOAST NOTIFICATION STYLES --- */
+        .toast-container {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; display: flex; flex-direction: column; gap: 10px;
+            width: 100%; max-width: 420px; pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 16px 20px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 12px;
+            font-size: 14px; font-weight: 600;
+            animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(10px);
+            opacity: 0; transform: translateY(-20px);
+        }
+
+        /* Toast Colors */
+        .toast.error { border-left: 4px solid #ef4444; color: #991b1b; background: #fef2f2; }
+        .toast.error i { color: #ef4444; font-size: 18px; }
+
+        .toast.warning { border-left: 4px solid #f59e0b; color: #92400e; background: #fffbeb; }
+        .toast.warning i { color: #f59e0b; font-size: 18px; }
+
+        .toast.success { border-left: 4px solid #10b981; color: #065f46; background: #ecfdf5; }
+        .toast.success i { color: #10b981; font-size: 18px; }
+
+        @keyframes slideDown { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px); } }
+
+
+        /* --- EXISTING STYLES --- */
+        .blob { position: absolute; filter: blur(60px); z-index: 0; opacity: 0.8; animation: float 8s infinite alternate ease-in-out; }
+        .blob-1 { width: 500px; height: 500px; background: linear-gradient(135deg, #a78bfa 0%, #818cf8 100%); top: -150px; left: -100px; }
+        .blob-2 { width: 400px; height: 400px; background: linear-gradient(135deg, #22d3ee 0%, #38bdf8 100%); bottom: -100px; right: -50px; animation-delay: -4s; }
+
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 20px) scale(1.05); } }
+
+        .login-container {
+            position: relative; z-index: 10; width: 950px; height: 600px; background: #ffffff;
+            border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
+            display: flex; overflow: hidden; border: 1px solid #f1f5f9;
+        }
+
+        .visual-side {
+            flex: 1.1; background: #0f172a;
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px; padding: 60px;
+            display: flex; flex-direction: column; justify-content: center; color: white; position: relative;
+        }
+        
+        .visual-side h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+        .visual-side p { color: #94a3b8; font-size: 16px; line-height: 1.6; max-width: 90%; }
+        
+        .feature-badge { 
+            display: inline-block; padding: 8px 16px; background: linear-gradient(90deg, #4f46e5, #ec4899);
+            border-radius: 30px; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+            margin-bottom: 25px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .form-side { flex: 1; padding: 50px; display: flex; align-items: center; justify-content: center; background: white; }
+        .form-wrapper { width: 100%; max-width: 320px; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-field {
+            width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px;
+            font-size: 14px; background: #f8fafc; transition: all 0.3s; color: #0f172a;
+        }
+        .input-field:focus { border-color: #6366f1; background: white; outline: none; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+
+        .btn-submit {
+            width: 100%; padding: 16px; background: #0f172a; color: white; border: none;
+            border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; font-size: 15px;
+        }
+        .btn-submit:hover { background: #4338ca; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(67, 56, 202, 0.2); }
+
+        .toggle-link { text-align: center; margin-top: 25px; font-size: 14px; color: #64748b; }
+        .toggle-link a { color: #4f46e5; font-weight: 700; cursor: pointer; text-decoration: none; }
+        .toggle-link a:hover { text-decoration: underline; }
+
+    </style>
+</head>
+<body>
+
+    <div class="toast-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="toast {{ category }}" id="toast-{{ loop.index }}">
+                        {% if category == 'error' %} <i class="fa-solid fa-circle-exclamation"></i>
+                        {% elif category == 'warning' %} <i class="fa-solid fa-triangle-exclamation"></i>
+                        {% else %} <i class="fa-solid fa-circle-check"></i>
+                        {% endif %}
+                        <span>{{ message }}</span>
+                    </div>
+                    
+                    <script>
+                        // Auto-Dismiss Logic
+                        setTimeout(() => {
+                            const toast = document.getElementById("toast-{{ loop.index }}");
+                            if(toast) {
+                                toast.style.animation = "fadeOut 0.5s forwards";
+                                setTimeout(() => toast.remove(), 500);
+                            }
+                        }, 4000);
+                    </script>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
-</div>
 
-<script>
-    function showSignup() { document.getElementById('login-section').style.display='none'; document.getElementById('signup-section').style.display='block'; }
-    function showLogin() { document.getElementById('login-section').style.display='block'; document.getElementById('signup-section').style.display='none'; }
-</script>
-{% endblock %}
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="login-container">
+        
+        <div class="visual-side">
+            <div><span class="feature-badge">✨ AI POWERED V2.0</span></div>
+            <h1>Research<br><span style="color: #a5b4fc;">Re-imagined.</span></h1>
+            <p>Experience the future of academic career. Analyze papers and draft internship applications in seconds.</p>
+        </div>
+
+        <div class="form-side">
+            <div class="form-wrapper">
+                
+                <div id="login-box">
+                    <h2 style="font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 10px;">Welcome back</h2>
+                    <p style="color: #64748b; font-size: 15px; margin-bottom: 30px;">Please enter your details.</p>
+
+                    <form action="/login" method="POST">
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" class="input-field" placeholder="john@university.edu" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" name="password" class="input-field" placeholder="••••••••" required>
+                        </div>
+
+                        <div style="text-align: right; margin-bottom: 15px;">
+                            <a href="/forgot_password" style="font-size: 12px; color: #4f46e5; font-weight: 600; text-decoration: none;">Forgot Password?</a>
+                        </div>
+
+                        <button class="btn-submit">Sign In to Dashboard</button>
+                    </form>
+                    <p class="toggle-link">New here? <a onclick="toggleForms()">Create account</a></p>
+                </div>
+
+                <div id="signup-box" style="display: none;">
+                    <h2 style="font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 10px;">Get Started</h2>
+                    <p style="color: #64748b; font-size: 15px; margin-bottom: 20px;">Join RAO for free.</p>
+
+                    <form action="/signup" method="POST">
+                        <div class="input-group">
+                            <label>I am a...</label>
+                            <select name="role" class="input-field">
+                                <option value="Student">Student</option>
+                                <option value="Professor">Professor</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" name="full_name" class="input-field" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" name="email" class="input-field" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" name="password" class="input-field" required>
+                        </div>
+                        <button class="btn-submit">Create Account</button>
+                    </form>
+                    <p class="toggle-link">Have an account? <a onclick="toggleForms()">Log in</a></p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleForms() {
+            var login = document.getElementById('login-box');
+            var signup = document.getElementById('signup-box');
+            if(login.style.display === 'none') {
+                login.style.display = 'block';
+                signup.style.display = 'none';
+            } else {
+                login.style.display = 'none';
+                signup.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>

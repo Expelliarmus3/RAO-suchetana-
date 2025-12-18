@@ -1,16 +1,186 @@
 {% extends "layout.html" %}
+
 {% block content %}
-<div style="display: flex; justify-content: center; align-items: center; height: 60vh;">
-    <div class="card" style="text-align: center; padding: 50px; width: 500px;">
-        <div style="width: 60px; height: 60px; background: #eff6ff; color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 24px;">
-            <i class="fa-regular fa-envelope"></i>
+<style>
+    /* --- ANIMATIONS & BACKGROUND --- */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(30px, 30px); }
+    }
+
+    /* Background Blobs (Local to this page) */
+    .page-bg-blobs {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden;
+    }
+    .blob {
+        position: absolute; filter: blur(70px); opacity: 0.6; animation: float 8s infinite alternate ease-in-out;
+    }
+    .blob-1 { width: 400px; height: 400px; background: #818cf8; top: 10%; left: 10%; }
+    .blob-2 { width: 350px; height: 350px; background: #22d3ee; bottom: 10%; right: 10%; animation-delay: -4s; }
+
+    /* --- CONTAINER --- */
+    .contact-container {
+        max-width: 950px; margin: 40px auto; display: flex;
+        background: white; border-radius: 24px;
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15);
+        overflow: hidden; border: 1px solid #f1f5f9;
+        animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        position: relative; z-index: 10;
+    }
+
+    /* --- LEFT SIDE: Dark + Texture --- */
+    .contact-info {
+        flex: 1.2;
+        background: #0f172a;
+        /* Cool Grid Texture Overlay */
+        background-image: 
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 30px 30px;
+        color: white; padding: 60px;
+        display: flex; flex-direction: column; justify-content: space-between;
+        position: relative;
+    }
+
+    .info-item {
+        margin-bottom: 35px; display: flex; align-items: center; gap: 20px;
+        transition: transform 0.2s;
+    }
+    .info-item:hover { transform: translateX(10px); }
+
+    .icon-box {
+        width: 50px; height: 50px; background: rgba(255,255,255,0.05);
+        border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        font-size: 20px; color: #818cf8; border: 1px solid rgba(255,255,255,0.1);
+        transition: 0.3s;
+    }
+    .info-item:hover .icon-box { background: #818cf8; color: white; box-shadow: 0 0 15px rgba(129, 140, 248, 0.4); }
+
+    /* --- RIGHT SIDE: Form --- */
+    .contact-form { flex: 1.5; padding: 60px; background: #ffffff; }
+
+    .form-group { margin-bottom: 25px; }
+
+    .form-group label {
+        display: block; margin-bottom: 10px; color: #64748b; font-size: 12px;
+        font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .form-input {
+        width: 100%; padding: 15px; border: 2px solid #f1f5f9; border-radius: 12px;
+        font-size: 14px; transition: all 0.3s ease; background: #f8fafc; color: #0f172a;
+    }
+
+    .form-input:focus {
+        border-color: #6366f1; background: white; outline: none;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); transform: translateY(-2px);
+    }
+
+    .send-btn {
+        background: #0f172a; color: white; border: none; padding: 16px 30px;
+        border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s;
+        width: 100%; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+
+    .send-btn:hover {
+        transform: translateY(-2px); box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+        background: #312e81;
+    }
+</style>
+
+<div class="page-bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+</div>
+
+<div class="contact-container">
+    <div class="contact-info">
+        <div>
+            <h2 style="font-size: 36px; font-weight: 800; margin-bottom: 15px; line-height: 1.2;">Let's start a<br><span style="color: #a5b4fc;">conversation.</span></h2>
+            <p style="color: #94a3b8; line-height: 1.6; font-size: 16px;">
+                Ask about the tool, report a bug, or suggest a new feature. We read every message.
+            </p>
         </div>
-        <h2 style="margin-bottom: 10px;">Get in Touch</h2>
-        <p style="color: #64748b; margin-bottom: 30px;">We'd love to hear from you. Reach out to the DevSync team.</p>
-        
-        <div style="background: #0f172a; color: white; padding: 15px; border-radius: 8px; font-family: monospace;">
-            devsync017@gmail.com
+
+        <div style="margin-top: 40px;">
+            <div class="info-item">
+                <div class="icon-box"><i class="fa-solid fa-envelope"></i></div>
+                <div>
+                    <div style="font-weight: 700; font-size: 15px;">Email Us</div>
+                    <div style="color: #cbd5e1; font-size: 13px;">support@devsync.com</div>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="icon-box"><i class="fa-solid fa-location-dot"></i></div>
+                <div>
+                    <div style="font-weight: 700; font-size: 15px;">HQ Location</div>
+                    <div style="color: #cbd5e1; font-size: 13px;">Kolkata, India</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="icon-box"><i class="fa-brands fa-discord"></i></div>
+                <div>
+                    <div style="font-weight: 700; font-size: 15px;">Community</div>
+                    <div style="color: #cbd5e1; font-size: 13px;">discord.gg/devsync</div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="contact-form">
+        <h3 style="color: #0f172a; margin-bottom: 30px; font-size: 24px; font-weight: 800;">Send a Message</h3>
+        
+        <form id="contactForm">
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" class="form-input" placeholder="e.g. John Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" class="form-input" placeholder="john@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Message</label>
+                <textarea class="form-input" rows="4" placeholder="How can we help you today?" required></textarea>
+            </div>
+
+            <button type="button" class="send-btn" onclick="sendMessage(this)">
+                <span>Send Message</span> 
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
 </div>
+
+<script>
+    function sendMessage(btn) {
+        // Cool Animation Button Logic
+        var originalText = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
+        btn.style.opacity = "0.7";
+        
+        setTimeout(function() {
+            btn.innerHTML = '<span>Sent Successfully!</span> <i class="fa-solid fa-check"></i>';
+            btn.style.background = "#16a34a"; // Green color
+            btn.style.opacity = "1";
+            
+            // Reset after 3 seconds
+            setTimeout(function() {
+                btn.innerHTML = originalText;
+                btn.style.background = "#0f172a";
+                document.getElementById('contactForm').reset();
+            }, 3000);
+        }, 1500);
+    }
+</script>
 {% endblock %}

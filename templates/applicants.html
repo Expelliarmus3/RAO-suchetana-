@@ -1,0 +1,221 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+    /* --- TABLE STYLES --- */
+    .table-container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+        overflow: hidden;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    
+    th {
+        background: #f8fafc;
+        padding: 18px 25px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 800;
+        color: #64748b;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    td {
+        padding: 20px 25px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        transition: background 0.2s;
+    }
+
+    tr:hover td { background: #f8fafc; }
+    tr:last-child td { border-bottom: none; }
+
+    /* AVATAR STYLE */
+    .candidate-profile { display: flex; align-items: center; gap: 12px; }
+    .avatar-circle {
+        width: 40px; height: 40px;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: white; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 14px;
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+    }
+
+    /* BADGES */
+    .domain-badge {
+        background: #eef2ff; color: #4f46e5;
+        padding: 4px 10px; border-radius: 20px;
+        font-size: 11px; font-weight: 700;
+        border: 1px solid #c7d2fe;
+    }
+
+    /* BUTTONS */
+    .action-group { display: flex; gap: 10px; justify-content: flex-end; }
+
+    .btn-action {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+        text-decoration: none; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+    }
+    
+    /* Resume Style (Red) */
+    .btn-pdf { background: #fef2f2; color: #ef4444; border-color: #fecaca; }
+    .btn-pdf:hover { background: #fee2e2; border-color: #fca5a5; }
+
+    /* Letter Style (Blue) */
+    .btn-letter { background: #eff6ff; color: #3b82f6; border-color: #bfdbfe; }
+    .btn-letter:hover { background: #dbeafe; border-color: #93c5fd; }
+
+    /* --- MODAL (POPUP) STYLES --- */
+    .letter-modal {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
+        z-index: 1000; align-items: center; justify-content: center;
+        opacity: 0; transition: opacity 0.3s ease;
+    }
+
+    .letter-content {
+        background: white; width: 650px; max-height: 85vh; overflow-y: auto;
+        border-radius: 20px; padding: 0; position: relative;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+        transform: scale(0.95); transition: transform 0.3s ease;
+    }
+
+    .show-modal { display: flex; opacity: 1; }
+    .show-modal .letter-content { transform: scale(1); }
+
+    .modal-header {
+        padding: 20px 30px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .email-body {
+        padding: 30px; font-family: 'Georgia', serif; font-size: 15px; 
+        line-height: 1.8; color: #334155; white-space: pre-wrap;
+    }
+</style>
+
+<div style="max-width: 1000px; margin: 0 auto; padding-bottom: 50px;">
+    
+    <div style="margin-bottom: 30px;">
+        <h2 style="font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 5px;">Applicant Review</h2>
+        <p style="color: #64748b; font-size: 14px;">Manage and review student applications for your research labs.</p>
+    </div>
+
+    {% if applications %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 30%;">CANDIDATE</th>
+                    <th style="width: 25%;">APPLIED FOR</th>
+                    <th style="width: 20%;">QUALIFICATION</th>
+                    <th style="width: 25%; text-align: right;">ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>
+                        <div class="candidate-profile">
+                            <div class="avatar-circle">
+                                {{ app.student.full_name[0] }}
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; color: #0f172a; font-size: 14px;">{{ app.student.full_name }}</div>
+                                <div style="font-size: 12px; color: #64748b;">{{ app.student.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        {% if app.internship %}
+                            <span class="domain-badge">{{ app.internship.domain }}</span>
+                            <div style="font-size: 13px; font-weight: 600; color: #334155; margin-top: 5px; line-height: 1.4;">
+                                {{ app.internship.title }}
+                            </div>
+                        {% else %}
+                            <span style="background:#f1f5f9; color:#64748b; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700;">General Inquiry</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <div style="color: #0f172a; font-weight: 600; font-size: 13px;">{{ app.student.qualification }}</div>
+                        <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">
+                            <i class="fa-solid fa-graduation-cap"></i> {{ app.student.college }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="action-group">
+                            {% if app.cover_letter %}
+                            <button onclick="openLetter(`{{ app.cover_letter }}`)" class="btn-action btn-letter">
+                                <i class="fa-solid fa-envelope-open-text"></i> Letter
+                            </button>
+                            {% endif %}
+
+                            {% if app.student.resume_file %}
+                            <a href="/download_resume/{{ app.student.resume_file }}" target="_blank" class="btn-action btn-pdf">
+                                <i class="fa-solid fa-file-pdf"></i> Resume
+                            </a>
+                            {% else %}
+                            <span style="font-size: 12px; color: #cbd5e1; font-style: italic; padding:8px;">No PDF</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 80px; background: white; border-radius: 16px; border: 2px dashed #e2e8f0;">
+        <div style="width: 60px; height: 60px; background: #f8fafc; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #cbd5e1; font-size: 24px;">
+            <i class="fa-solid fa-user-group"></i>
+        </div>
+        <h3 style="color: #0f172a; font-size: 18px; margin-bottom: 5px;">No Applicants Yet</h3>
+        <p style="color: #64748b; font-size: 14px;">Share your research opportunities to get more students.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+<div id="letterModal" class="letter-modal">
+    <div class="letter-content">
+        <div class="modal-header">
+            <h3 style="font-size: 18px; color: #0f172a; margin: 0;">Candidate Cover Letter</h3>
+            <button onclick="closeLetter()" style="border:none; background:none; font-size:24px; cursor:pointer; color:#94a3b8;">&times;</button>
+        </div>
+        
+        <div id="modalText" class="email-body"></div>
+        
+        <div style="background: #f8fafc; padding: 15px 30px; text-align: right; border-top: 1px solid #e2e8f0; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;">
+            <button onclick="closeLetter()" style="background:#0f172a; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:600;">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openLetter(text) {
+        document.getElementById('modalText').innerText = text;
+        document.getElementById('letterModal').classList.add('show-modal');
+    }
+    
+    function closeLetter() {
+        document.getElementById('letterModal').classList.remove('show-modal');
+    }
+
+    // Close on click outside
+    window.onclick = function(event) {
+        var modal = document.getElementById('letterModal');
+        if (event.target == modal) {
+            closeLetter();
+        }
+    }
+</script>
+{% endblock %}
