@@ -16,7 +16,8 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # --- 1. CONFIGURE GEMINI API ---
 # New Line 15
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+# Old Line 15
+genai.configure(api_key="AIzaSyC3nCzYWD-UIk312cLVxVIQN3xAuraQs1E")
 model = genai.GenerativeModel('models/gemini-flash-latest')
 
 # --- 2. DATABASE CONFIGURATION & MODELS ---
