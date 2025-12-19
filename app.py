@@ -198,9 +198,11 @@ def papers():
 @app.route('/my_applications')
 @login_required
 def my_applications():
-    if current_user.role != 'Student': return redirect('/')
-    applications = Application.query.filter_by(student_id=current_user.id).all()
-    return render_template('my_applications.html', applications=applications)
+    if current_user.role != 'Student': 
+        return redirect('/')
+        # Fetch all applications for the current student
+    apps = Application.query.filter_by(student_id=current_user.id).all()
+    return render_template('my_applications.html', applications=apps)
 
 # [UPDATED AI FLOW] Handles both URL and Description text
 @app.route('/optimize', methods=['POST'])

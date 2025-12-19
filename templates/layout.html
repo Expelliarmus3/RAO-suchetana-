@@ -92,6 +92,7 @@
                 {% else %}
                     <li><a href="/student" class="{{ 'active' if request.path == '/student' else '' }}"><i class="fa-solid fa-house"></i> Home</a></li>
                     <li><a href="/papers" class="{{ 'active' if request.path == '/papers' else '' }}"><i class="fa-solid fa-layer-group"></i> Internships</a></li>
+                    <li><a href="/my_applications" class="{{ 'active' if request.path == '/my_applications' else '' }}"><i class="fa-solid fa-file-signature"></i> My Applications</a></li>
                 {% endif %}
 
                 <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
@@ -109,6 +110,7 @@
                     {% else %}
                         <a href="/student" class="{{ 'active' if request.path == '/student' else '' }}">Optimizer</a>
                         <a href="/papers" class="{{ 'active' if request.path == '/papers' else '' }}">Internships</a>
+                        <a href="/my_applications" class="{{ 'active' if request.path == '/my_applications' else '' }}">My Applications</a>
                     {% endif %}
                     
                     <a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact Us</a>
