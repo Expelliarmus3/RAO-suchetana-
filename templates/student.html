@@ -5,36 +5,19 @@
     /* --- 1. GLOBAL BACKGROUND STYLES --- */
     body {
         background-color: #f8fafc; /* Light base */
-        /* Combined Backgrounds:
-           1. The original technical gray grid.
-           2-4. New subtle pastel micro-dots for a "cute design" feel.
-        */
         background-image: 
             radial-gradient(#cbd5e1 1px, transparent 1px), /* Original Grid */
             radial-gradient(rgba(167, 139, 250, 0.2) 1.5px, transparent 1.5px), /* Cute Purple Dot */
             radial-gradient(rgba(34, 211, 238, 0.2) 1.5px, transparent 1.5px), /* Cute Cyan Dot */
             radial-gradient(rgba(244, 114, 182, 0.2) 1.5px, transparent 1.5px); /* Cute Pink Dot */
         
-        /* Varying sizes create a scattered, non-uniform look */
-        background-size: 
-            30px 30px,  /* Grid size */
-            90px 90px,  /* Purple scatter */
-            130px 130px, /* Cyan scatter */
-            170px 170px; /* Pink scatter */
-            
-        /* Offset positions so they don't overlap perfectly */
-        background-position:
-            0 0,
-            20px 20px,
-            60px 80px,
-            100px 40px;
-
+        background-size: 30px 30px, 90px 90px, 130px 130px, 170px 170px;
+        background-position: 0 0, 20px 20px, 60px 80px, 100px 40px;
         min-height: 100vh;
         position: relative;
-        overflow-x: hidden; /* Ensures blobs don't cause horizontal scroll */
+        overflow-x: hidden;
     }
 
-    /* Floating Blobs for Color Pop */
     .blob {
         position: absolute; filter: blur(80px); z-index: -1; opacity: 0.6;
         animation: float 10s infinite alternate ease-in-out;
@@ -47,8 +30,32 @@
 
     .fade-in { animation: slideUp 0.6s ease-out forwards; position: relative; z-index: 1; }
 
+    /* --- NEW: APPLICATIONS TRACKER UNDER NAVBAR --- */
+    .apps-tracker {
+        max-width: 900px; margin: 20px auto 40px;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 24px; padding: 20px;
+        border: 1px solid white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    .app-mini-card {
+        background: white; border-radius: 16px; padding: 12px 20px;
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 10px; border: 1px solid #f1f5f9;
+        transition: 0.2s;
+    }
+    .app-mini-card:hover { transform: scale(1.01); border-color: #e2e8f0; }
+
+    .status-pill {
+        padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+    }
+    .status-selected { background: #dcfce7; color: #166534; }
+    .status-pending { background: #fef3c7; color: #92400e; }
+
     /* --- 2. HERO & TYPOGRAPHY --- */
-    .hero-box { text-align: center; margin-top: 50px; margin-bottom: 50px; }
+    .hero-box { text-align: center; margin-top: 30px; margin-bottom: 50px; }
     
     .gradient-text {
         background: linear-gradient(135deg, #1e293b 0%, #4f46e5 100%);
@@ -138,191 +145,219 @@
 <div class="blob blob-2"></div>
 
 <div class="fade-in">
-    <div class="hero-box">
-        <div style="margin-bottom: 20px;">
-            <span style="background: white; color: #6366f1; padding: 8px 16px; border-radius: 30px; font-size: 11px; font-weight: 800; letter-spacing: 1px; border: 1px solid #e0e7ff; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">✨ AI POWERED </span>
-        </div>
-        <h1 class="hero-title">Research Application <span class="gradient-text">Optimizer</span></h1>
-        <p style="color:#64748b; font-size:18px; margin-bottom:50px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
-            Turn complex research papers into hyper-personalized internship applications in seconds.
-        </p>
 
-        <div class="search-wrap">
-            <span style="padding-left: 20px; color: #6366f1; font-size: 18px;"><i class="fa-solid fa-link"></i></span>
-            <input type="text" id="paperUrl" placeholder="Paste Research Paper Link (arXiv, Semantic Scholar)...">
-            <button onclick="runOptimizer()" class="btn-optimize" id="opt-btn">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Optimize
-            </button>
+    <div class="apps-tracker">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
+            <h5 style="margin: 0; font-weight: 800; color: #0f172a; font-size: 16px;"><i class="fa-solid fa-list-check" style="color:#6366f1;"></i> My Applications</h5>
+            <a href="/my_applications" style="font-size: 12px; font-weight: 700; color: #6366f1; text-decoration: none;">View All <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-    </div>
-
-    <div id="featuresArea" class="features-grid">
-        <div class="feature-card">
-            <div class="icon-box" style="background: #eff6ff; color: #3b82f6;"><i class="fa-solid fa-robot"></i></div>
-            <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 700;">AI Summarizer</h3>
-            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Instantly extracts key topics and methods from complex PDFs.</p>
-        </div>
-        <div class="feature-card">
-            <div class="icon-box" style="background: #f0fdf4; color: #16a34a;"><i class="fa-solid fa-check-double"></i></div>
-            <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 700;">Skill Matching</h3>
-            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Identifies technical gaps between your resume and the paper.</p>
-        </div>
-        <div class="feature-card">
-            <div class="icon-box" style="background: #f5f3ff; color: #7c3aed;"><i class="fa-solid fa-envelope-open-text"></i></div>
-            <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 700;">Smart Drafting</h3>
-            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Writes professional, context-aware applications to professors.</p>
-        </div>
-    </div>
-
-    <div id="result-area" class="res-grid" style="display:none;">
         
-        <div class="res-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h3 style="font-size:20px; color:#0f172a; font-weight: 700;"><i class="fa-solid fa-file-pen" style="color: #6366f1; margin-right: 8px;"></i> Generated Draft</h3>
-                <span style="font-size:12px; color:#64748b; background:#f1f5f9; padding:6px 12px; border-radius:8px; font-weight: 600;">Editable Mode</span>
-            </div>
-            <textarea id="app-text"></textarea>
-        </div>
-
-        <div style="display:flex; flex-direction:column; gap:25px;">
-            
-            <div class="res-card" style="padding: 30px;">
-                <div class="meta-item"><span style="color:#64748b; font-weight:600;">Citation Score</span><span id="cit-score" style="color:#0f172a; font-weight:800;">-</span></div>
-                <div class="meta-item"><span style="color:#64748b; font-weight:600;">Est. Vacancies</span><span id="vacancies" style="color:#0f172a; font-weight:800;">-</span></div>
-                <div class="meta-item" style="border:none;"><span style="color:#64748b; font-weight:600;">Competition</span><span id="applicants" style="color:#0f172a; font-weight:800;">-</span></div>
-            </div>
-
-            <div class="res-card">
-                <h4 style="margin-bottom:15px; font-size:16px; color:#0f172a; font-weight: 700;">📄 Quick Summary</h4>
-                <p id="paper-summary" style="font-size:14px; color:#475569; line-height:1.7;">...</p>
-            </div>
-
-            <div class="res-card">
-                <h4 style="margin-bottom:15px; font-size:16px; color:#0f172a; font-weight: 700;">⚡ Required Skills</h4>
-                <div id="skills-container"></div>
-            </div>
-            
-            <div class="res-card">
-                <h4 style="margin-bottom:15px; font-size:16px; color:#0f172a; font-weight: 700;">📎 Attach Resume</h4>
-                <form id="appForm">
-                    <div class="upload-area" id="drop-zone">
-                        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                        <div class="upload-label" id="file-label">Click to Upload PDF</div>
-                        <input type="file" id="resumeFile" name="resume" accept=".pdf" onchange="updateFileName()">
+        {% if applications %}
+            {% for app in applications[:2] %} <div class="app-mini-card">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 40px; height: 40px; background: #f8fafc; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #6366f1;">
+                        <i class="fa-solid fa-file-alt"></i>
                     </div>
-                </form>
-                
-                <button onclick="submitApp()" id="btn-apply" style="width:100%; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color:white; padding:18px; border-radius:12px; border:none; font-weight:700; cursor:pointer; font-size:16px; transition: transform 0.2s; box-shadow: 0 10px 20px rgba(22, 163, 74, 0.2);">
-                    Apply Now <i class="fa-solid fa-paper-plane" style="margin-left:8px;"></i>
-                </button>
+                    <div>
+                        <div style="font-size: 14px; font-weight: 700; color: #1e293b;">{{ app.internship.title if app.internship else "External Research" }}</div>
+                        <div style="font-size: 11px; color: #94a3b8;">Applied on {{ app.status_date if app.status_date else 'Recent' }}</div>
+                    </div>
+                </div>
+                <span class="status-pill {{ 'status-selected' if app.status == 'Selected' else 'status-pending' }}">
+                    {{ 'Selected' if app.status == 'Selected' else 'Pending' }}
+                </span>
             </div>
-
-        </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; color: #94a3b8; font-size: 13px; margin: 20px 0;">You haven't applied to anything yet.</p>
+        {% endif %}
     </div>
+
+    <div class="hero-box">
+        <div style="margin-bottom: 20px;">
+            <span style="background: white; color: #6366f1; padding: 8px 16px; border-radius: 30px; font-size: 11px; font-weight: 800; letter-spacing: 1px; border: 1px solid #e0e7ff; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">✨ AI POWERED </span>
+        </div>
+        <h1 class="hero-title">Research Application <span class="gradient-text">Optimizer</span></h1>
+        <p style="color:#64748b; font-size:18px; margin-bottom:50px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+            Turn complex research papers into hyper-personalized internship applications in seconds.
+        </p>
+
+        <div class="search-wrap">
+            <span style="padding-left: 20px; color: #6366f1; font-size: 18px;"><i class="fa-solid fa-link"></i></span>
+            <input type="text" id="paperUrl" placeholder="Paste Research Paper Link (arXiv, Semantic Scholar)...">
+            <button onclick="runOptimizer()" class="btn-optimize" id="opt-btn">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Optimize
+            </button>
+        </div>
+    </div>
+
+    <div id="featuresArea" class="features-grid">
+        <div class="feature-card">
+            <div class="icon-box" style="background: #eff6ff; color: #3b82f6;"><i class="fa-solid fa-robot"></i></div>
+            <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 700;">AI Summarizer</h3>
+            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Instantly extracts key topics and methods from complex PDFs.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon-box" style="background: #f0fdf4; color: #16a34a;"><i class="fa-solid fa-check-double"></i></div>
+            <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 700;">Skill Matching</h3>
+            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Identifies technical gaps between your resume and the paper.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon-box" style="background: #f5f3ff; color: #7c3aed;"><i class="fa-solid fa-envelope-open-text"></i></div>
+            <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 700;">Smart Drafting</h3>
+            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Writes professional, context-aware applications to professors.</p>
+        </div>
+    </div>
+
+    <div id="result-area" class="res-grid" style="display:none;">
+        
+        <div class="res-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="font-size:20px; color:#0f172a; font-weight: 700;"><i class="fa-solid fa-file-pen" style="color: #6366f1; margin-right: 8px;"></i> Generated Draft</h3>
+                <span style="font-size:12px; color:#64748b; background:#f1f5f9; padding:6px 12px; border-radius:8px; font-weight: 600;">Editable Mode</span>
+            </div>
+            <textarea id="app-text"></textarea>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:25px;">
+            
+            <div class="res-card" style="padding: 30px;">
+                <div class="meta-item"><span style="color:#64748b; font-weight:600;">Citation Score</span><span id="cit-score" style="color:#0f172a; font-weight:800;">-</span></div>
+                <div class="meta-item"><span style="color:#64748b; font-weight:600;">Est. Vacancies</span><span id="vacancies" style="color:#0f172a; font-weight:800;">-</span></div>
+                <div class="meta-item" style="border:none;"><span style="color:#64748b; font-weight:600;">Competition</span><span id="applicants" style="color:#0f172a; font-weight:800;">-</span></div>
+            </div>
+
+            <div class="res-card">
+                <h4 style="margin-bottom:15px; font-size:16px; color:#0f172a; font-weight: 700;">📄 Quick Summary</h4>
+                <p id="paper-summary" style="font-size:14px; color:#475569; line-height:1.7;">...</p>
+            </div>
+
+            <div class="res-card">
+                <h4 style="margin-bottom:15px; font-size:16px; color:#0f172a; font-weight: 700;">⚡ Required Skills</h4>
+                <div id="skills-container"></div>
+            </div>
+            
+            <div class="res-card">
+                <h4 style="margin-bottom:15px; font-size:16px; color:#0f172a; font-weight: 700;">📎 Attach Resume</h4>
+                <form id="appForm">
+                    <div class="upload-area" id="drop-zone">
+                        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                        <div class="upload-label" id="file-label">Click to Upload PDF</div>
+                        <input type="file" id="resumeFile" name="resume" accept=".pdf" onchange="updateFileName()">
+                    </div>
+                </form>
+                
+                <button onclick="submitApp()" id="btn-apply" style="width:100%; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color:white; padding:18px; border-radius:12px; border:none; font-weight:700; cursor:pointer; font-size:16px; transition: transform 0.2s; box-shadow: 0 10px 20px rgba(22, 163, 74, 0.2);">
+                    Apply Now <i class="fa-solid fa-paper-plane" style="margin-left:8px;"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <script>
-    async function runOptimizer() {
-        const btn = document.getElementById('opt-btn');
-        const resultArea = document.getElementById('result-area');
-        const featuresArea = document.getElementById('featuresArea'); 
-        
-        // Loading State
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
-        btn.style.opacity = "0.7";
-        
-        try {
-            const url = document.getElementById('paperUrl').value;
-            if(!url) { alert("Please enter a URL!"); btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Optimize'; btn.style.opacity = "1"; return; }
+    async function runOptimizer() {
+        const btn = document.getElementById('opt-btn');
+        const resultArea = document.getElementById('result-area');
+        const featuresArea = document.getElementById('featuresArea'); 
+        
+        // Loading State
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+        btn.style.opacity = "0.7";
+        
+        try {
+            const url = document.getElementById('paperUrl').value;
+            if(!url) { alert("Please enter a URL!"); btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Optimize'; btn.style.opacity = "1"; return; }
 
-            const response = await fetch('/optimize', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({url: url})
-            });
-            const data = await response.json();
-            
-            if(data.error) {
-                 alert("Error: " + data.error);
-                 btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Optimize';
-                 return;
-            }
+            const response = await fetch('/optimize', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({url: url})
+            });
+            const data = await response.json();
+            
+            if(data.error) {
+                 alert("Error: " + data.error);
+                 btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Optimize';
+                 return;
+            }
 
-            // FILL DATA
-            document.getElementById('app-text').value = data.application;
-            document.getElementById('cit-score').innerText = data.analysis.citation_score;
-            document.getElementById('vacancies').innerText = data.analysis.vacancies;
-            document.getElementById('applicants').innerText = data.analysis.applicants;
-            document.getElementById('paper-summary').innerText = data.analysis.summary;
-            
-            const skillsDiv = document.getElementById('skills-container');
-            skillsDiv.innerHTML = '';
-            data.analysis.skills.forEach(skill => {
-                skillsDiv.innerHTML += `<span class="skill-tag">${skill}</span>`;
-            });
+            // FILL DATA
+            document.getElementById('app-text').value = data.application;
+            document.getElementById('cit-score').innerText = data.analysis.citation_score;
+            document.getElementById('vacancies').innerText = data.analysis.vacancies;
+            document.getElementById('applicants').innerText = data.analysis.applicants;
+            document.getElementById('paper-summary').innerText = data.analysis.summary;
+            
+            const skillsDiv = document.getElementById('skills-container');
+            skillsDiv.innerHTML = '';
+            data.analysis.skills.forEach(skill => {
+                skillsDiv.innerHTML += `<span class="skill-tag">${skill}</span>`;
+            });
 
-            // SWITCH VIEW
-            featuresArea.style.display = 'none';
-            resultArea.style.display = 'grid';
-            
-            // Reset Button
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Done';
-            btn.style.background = "#16a34a"; 
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Optimize';
-                btn.style.background = "#0f172a";
-                btn.style.opacity = "1";
-            }, 3000);
-            
-        } catch (error) {
-            console.error(error);
-            alert("Error fetching data. Check console.");
-            btn.innerHTML = 'Retry';
-        }
-    }
+            // SWITCH VIEW
+            featuresArea.style.display = 'none';
+            resultArea.style.display = 'grid';
+            
+            // Reset Button
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Done';
+            btn.style.background = "#16a34a"; 
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Optimize';
+                btn.style.background = "#0f172a";
+                btn.style.opacity = "1";
+            }, 3000);
+            
+        } catch (error) {
+            console.error(error);
+            alert("Error fetching data. Check console.");
+            btn.innerHTML = 'Retry';
+        }
+    }
 
-    function updateFileName() {
-        const input = document.getElementById('resumeFile');
-        const label = document.getElementById('file-label');
-        if(input.files && input.files[0]) {
-            label.innerText = input.files[0].name;
-            label.style.color = "#16a34a"; 
-            label.style.fontWeight = "700";
-        }
-    }
+    function updateFileName() {
+        const input = document.getElementById('resumeFile');
+        const label = document.getElementById('file-label');
+        if(input.files && input.files[0]) {
+            label.innerText = input.files[0].name;
+            label.style.color = "#16a34a"; 
+            label.style.fontWeight = "700";
+        }
+    }
 
-    async function submitApp() {
-        const fileInput = document.getElementById('resumeFile');
-        const textInput = document.getElementById('app-text'); 
-        const btn = document.getElementById('btn-apply');
+    async function submitApp() {
+        const fileInput = document.getElementById('resumeFile');
+        const textInput = document.getElementById('app-text'); 
+        const btn = document.getElementById('btn-apply');
 
-        if (!fileInput.files[0]) { alert("Please attach your resume first!"); return; }
-        if (!textInput.value) { alert("Please generate or write an email first!"); return; }
+        if (!fileInput.files[0]) { alert("Please attach your resume first!"); return; }
+        if (!textInput.value) { alert("Please generate or write an email first!"); return; }
 
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
 
-        const formData = new FormData();
-        formData.append('resume', fileInput.files[0]);
-        formData.append('cover_letter', textInput.value); 
+        const formData = new FormData();
+        formData.append('resume', fileInput.files[0]);
+        formData.append('cover_letter', textInput.value); 
 
-        try {
-            const response = await fetch('/submit_application', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            
-            if(data.status === 'success') {
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> Sent!';
-                btn.style.background = "#059669";
-                alert("Success! The Professor can now view your Cover Letter and Resume.");
-            }
-        } catch (e) {
-            console.error(e);
-            alert("Upload failed.");
-            btn.innerHTML = 'Retry';
-        }
-    }
+        try {
+            const response = await fetch('/submit_application', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            
+            if(data.status === 'success') {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Sent!';
+                btn.style.background = "#059669";
+                alert("Success! The Professor can now view your Cover Letter and Resume.");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Upload failed.");
+            btn.innerHTML = 'Retry';
+        }
+    }
 </script>
-{% endblock %}
+{% endblock %}]

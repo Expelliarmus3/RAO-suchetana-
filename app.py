@@ -183,7 +183,9 @@ def download_resume(filename):
 @login_required
 def student():
     if current_user.role == 'Professor': return redirect('/professor')
-    return render_template('student.html')
+    # Fetch applications so they can be displayed under the navbar
+    apps = Application.query.filter_by(student_id=current_user.id).all()
+    return render_template('student.html', applications=apps)
 
 @app.route('/papers')
 @login_required
